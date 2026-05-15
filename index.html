@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PomoTower</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; overflow: hidden; }
+    canvas { display: block; }
+
+    #ui {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 10;
+    }
+
+    button {
+      background: rgba(20, 10, 5, 0.85);
+      color: #e8c97a;
+      border: 1px solid #6b4c1e;
+      padding: 10px 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      letter-spacing: 2px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    button:hover { background: rgba(80, 40, 10, 0.9); border-color: #e8c97a; }
+
+    #session-label {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #e8c97a88;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      z-index: 10;
+    }
+
+    #pomodoro-dots {
+      position: fixed;
+      top: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: 1px solid #6b4c1e;
+      background: transparent;
+      transition: background 0.4s;
+    }
+    .dot.done { background: #e8c97a; }
+  </style>
+</head>
+<body>
+  <div id="session-label">FOCUS SESSION</div>
+  <div id="pomodoro-dots">
+    <div class="dot" id="dot-0"></div>
+    <div class="dot" id="dot-1"></div>
+    <div class="dot" id="dot-2"></div>
+    <div class="dot" id="dot-3"></div>
+  </div>
+  <div id="ui">
+    <button id="btn-start">Start</button>
+    <button id="btn-reset">Reset</button>
+  </div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
