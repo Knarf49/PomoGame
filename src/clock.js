@@ -27,12 +27,12 @@ function makeDigitCanvas(num, half, color = '#e8c97a', bg = '#0a0603') {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
-  // clip to top or bottom half
+  // clip to top or bottom half — no gap at the fold line
   ctx.save();
   if (half === 'top') {
-    ctx.rect(0, 0, W, H / 2 - 1);
+    ctx.rect(0, 0, W, H / 2);
   } else {
-    ctx.rect(0, H / 2 + 1, W, H / 2);
+    ctx.rect(0, H / 2, W, H / 2);
   }
   ctx.clip();
   ctx.fillText(String(num), W / 2, H / 2);
@@ -61,13 +61,13 @@ class FlipDigit {
 
     const geo = new THREE.PlaneGeometry(DIGIT_W, DIGIT_H / 2);
 
-    // static top — shows current number top half
+    // static top — slightly in front to avoid z-fighting, snapped to fold line
     this.staticTop = new THREE.Mesh(geo, mat(0, 'top'));
-    this.staticTop.position.y = DIGIT_H / 4;
+    this.staticTop.position.set(0, DIGIT_H / 4, 0.001);
 
-    // static bottom — shows NEXT number bottom half (revealed after flip)
+    // static bottom — sits flush behind the fold line
     this.staticBottom = new THREE.Mesh(geo, mat(0, 'bottom'));
-    this.staticBottom.position.y = -DIGIT_H / 4;
+    this.staticBottom.position.set(0, -DIGIT_H / 4, 0.0);
 
     // flap top — current number top half, rotates down
     this.flapTop = new THREE.Mesh(geo, mat(0, 'top'));
@@ -93,6 +93,14 @@ class FlipDigit {
     this.pivotBottom.add(this.flapBottom);
 
     this.group.add(this.pivotTop, this.pivotBottom);
+
+    // thin divider line at the fold — sits in front of everything
+    const divider = new THREE.Mesh(
+      new THREE.PlaneGeometry(DIGIT_W, 0.004),
+      new THREE.MeshBasicMaterial({ color: 0x0a0603 })
+    );
+    divider.position.z = 0.003;
+    this.group.add(divider);
   }
 
   flipTo(next) {
